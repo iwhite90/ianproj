@@ -107,6 +107,12 @@ function doLayout() {
     handleElems[i].setAttribute("onclick", "doLinking(this, " + i + ")");
   }
 
+
+  var linkElems = document.getElementsByClassName('link');
+  for (var i = 0; i < linkElems.length; i++) {
+    linkElems[i].setAttribute("onclick", "doDelete(this, " + i + ")");
+  }
+
   force.on("tick", function() {
     link.attr("points", function(d) { return [d.source.x, ',', d.source.y, ' ', d.source.x + 10, ',', d.source.y, ' ', d.target.x, ',', d.target.y].join('');})
 
@@ -177,9 +183,15 @@ function doLinking(elem, index) {
     }
 
     if (!exists) links.push({"source":linkSource,"target":linkTarget});
-    console.log(links);
     linkSource = null;
     elem.setAttribute("style", "fill: red;")
+    doLayout();
+  }
+}
+
+function doDelete(elem, index) {
+  if (confirm("Delete this link?")) {
+    links.splice(index, 1);
     doLayout();
   }
 }
