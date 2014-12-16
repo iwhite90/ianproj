@@ -20,6 +20,6 @@ object Application extends Controller {
 
   def updateProject = Action(parse.temporaryFile) { request =>
     request.body.moveTo(new File("public/nodes.json"), true)
-    Ok("""{"Status":"Success"}""")
+    Ok("""{"status":"Saved"}""")
   }
 }
