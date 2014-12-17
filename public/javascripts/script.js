@@ -8,7 +8,7 @@ var color = d3.scale.category20();
 var force = d3.layout.force()
     .charge(-400)
     .linkDistance(30)
-	  .linkStrength(0.01)
+	.linkStrength(0.01)
     .size([width, height]);
 
 var svg = d3.select("body").append("svg")
@@ -47,9 +47,10 @@ function doLayout() {
 
   svg.attr("width", width)
      .attr("height", height);
+
   force.nodes(nodes)
        .links(links)
-	     .start();
+	   .start();
 
   var scale = d3.scale.linear()
                       .domain([0, nodes.length])
@@ -70,42 +71,39 @@ function doLayout() {
        .data(nodes)
        .enter().append("rect");
 
-  var nodeAttrs =
-    node.attr("class", "btn btn-info btn-lg")
-        .attr("width", nodeWidth)
-		.attr("height", nodeHeight)
-		.attr("rx", 20)
-		.attr("ry", 20)
-        .style("fill", function(d, i) { return "rgb(0, 0, " + Math.ceil(scale(i)) + ")"; })
-        .call(force.drag);
+  node.attr("class", "btn btn-info btn-lg")
+      .attr("width", nodeWidth)
+      .attr("height", nodeHeight)
+	  .attr("rx", 20)
+	  .attr("ry", 20)
+      .style("fill", function(d, i) { return "rgb(0, 0, " + Math.ceil(scale(i)) + ")"; })
+      .call(force.drag);
 
   var nodeText =
     svg.selectAll(".nodeText")
 	   .data(nodes)
 	   .enter().append("text");
 
-  var textLabels =
-    nodeText.attr("x", function(d) { return d.x; })
-		    .attr("y", function(d) { return d.y; })
-		    .text( function (d) { return d.name; })
-		    .attr("class", "text")
-		    .attr("id", function(d, i) { return "text_" + i;})
-		    .attr("text-anchor", "middle")
-		    .attr("fill", "#FFFFFF")
-		    .on("click", updateText);
+  nodeText.attr("x", function(d) { return d.x; })
+          .attr("y", function(d) { return d.y; })
+          .text( function (d) { return d.name; })
+          .attr("class", "text")
+          .attr("id", function(d, i) { return "text_" + i;})
+          .attr("text-anchor", "middle")
+          .attr("fill", "#FFFFFF")
+          .on("click", updateText);
 
   var handles =
     svg.selectAll(".handle")
 	   .data(nodes)
 	   .enter().append("rect");
 
-  var handleAttrs =
-    handles.attr("width", 10)
-           .attr("height", 10)
-           .attr("rx", 3)
-           .attr("ry", 3)
-           .attr("class", "handle")
-           .style("fill", function(d, i) { return "rgb(" + Math.ceil(invScale(i)) + ", " + Math.ceil(scale(i)) +", 0)"; })
+  handles.attr("width", 10)
+         .attr("height", 10)
+         .attr("rx", 3)
+         .attr("ry", 3)
+         .attr("class", "handle")
+         .style("fill", function(d, i) { return "rgb(" + Math.ceil(invScale(i)) + ", " + Math.ceil(scale(i)) +", 0)"; })
 
   var handleElems = document.getElementsByClassName('handle');
   for (var i = 0; i < handleElems.length; i++) {
