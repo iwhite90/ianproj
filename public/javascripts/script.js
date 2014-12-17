@@ -42,14 +42,21 @@ function doLayout() {
     if (nodes[i].py > maxHeight) maxHeight = nodes[i].py;
   }
 
-  width = maxWidth + 200;
-  height = maxHeight + 150;
+  width = maxWidth + 400;
+  height = maxHeight + 500;
 
   svg.attr("width", width)
      .attr("height", height);
   force.nodes(nodes)
        .links(links)
 	     .start();
+
+  var scale = d3.scale.linear()
+                      .domain([0, nodes.length])
+                      .range([100, 255]);
+  var invScale = d3.scale.linear()
+                        .domain([0, nodes.length])
+                        .range([255, 0]);
 
   var link =
 	svg.selectAll(".link")
@@ -69,7 +76,7 @@ function doLayout() {
 		.attr("height", nodeHeight)
 		.attr("rx", 20)
 		.attr("ry", 20)
-        .style("fill", function(d) { return color(2); })
+        .style("fill", function(d, i) { return "rgb(0, 0, " + Math.ceil(scale(i)) + ")"; })
         .call(force.drag);
 
   var nodeText =
@@ -82,6 +89,7 @@ function doLayout() {
 		    .attr("y", function(d) { return d.y; })
 		    .text( function (d) { return d.name; })
 		    .attr("class", "text")
+		    .attr("text-anchor", "middle")
 		    .attr("fill", "#FFFFFF");
 
   var texts = document.getElementsByTagName('text');
@@ -100,7 +108,7 @@ function doLayout() {
            .attr("rx", 3)
            .attr("ry", 3)
            .attr("class", "handle")
-           .style("fill", "red")
+           .style("fill", function(d, i) { return "rgb(" + Math.ceil(invScale(i)) + ", " + Math.ceil(scale(i)) +", 0)"; })
 
   var handleElems = document.getElementsByClassName('handle');
   for (var i = 0; i < handleElems.length; i++) {
@@ -119,8 +127,8 @@ function doLayout() {
     node.attr("x", function(d) { return d.x - nodeWidth / 2; })
         .attr("y", function(d) { return d.y - nodeHeight / 2; });
 
-    nodeText.attr("x", function(d) { return d.x - nodeWidth / 2 + 10; })
-            .attr("y", function(d) { return d.y; });
+    nodeText.attr("x", function(d) { return d.x; })
+            .attr("y", function(d) { return d.y - 5; });
 
     handles.attr("x", function(d) { return d.x + 35;})
            .attr("y", function(d) { return d.y + 10;})
@@ -149,7 +157,7 @@ function saveProject() {
 }
 
 function newTask() {
-  nodes.push({"name":"New","y":0,"x":0,"fixed":1,"py":0,"px":0,"weight":1,"index":nodes.length});
+  nodes.push({"name":"New","y":50,"x":100,"fixed":1,"py":50,"px":60,"weight":1,"index":nodes.length});
   doLayout();
 }
 
