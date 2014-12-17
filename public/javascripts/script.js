@@ -89,13 +89,10 @@ function doLayout() {
 		    .attr("y", function(d) { return d.y; })
 		    .text( function (d) { return d.name; })
 		    .attr("class", "text")
+		    .attr("id", function(d, i) { return "text_" + i;})
 		    .attr("text-anchor", "middle")
-		    .attr("fill", "#FFFFFF");
-
-  var texts = document.getElementsByTagName('text');
-  for (var i = 0; i < texts.length; i++) {
-    texts[i].setAttribute("onclick", "updateText(this, " + i + ")");
-  }
+		    .attr("fill", "#FFFFFF")
+		    .on("click", updateText);
 
   var handles =
     svg.selectAll(".handle")
@@ -161,11 +158,14 @@ function newTask() {
   doLayout();
 }
 
-function updateText(elem, index) {
-  var newText = prompt("Update the task name", elem.innerHTML);
+function updateText() {
+  var e = d3.select(this)[0][0],
+      index = e.id.replace('text_', ''),
+      newText = prompt("Update the task name", e.innerHTML);
+
   if (newText) {
     nodes[index].name = newText;
-    elem.innerHTML = newText;
+    e.innerHTML = newText;
   }
 }
 
